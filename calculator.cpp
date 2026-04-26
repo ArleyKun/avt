@@ -33,16 +33,16 @@ Keypad customKeypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 void setup(){
   lcd.begin(16,2);
-  lcd.setCursor(5,0);
-  lcd.print("Sirena");
-  lcd.setCursor(2,1);
-  lcd.print("Robotics Lab");
+  lcd.setCursor(2,0);
+  lcd.print("arley minaro");
+  lcd.setCursor(3,1);
+  lcd.print("baet 1-a");
   delay(3000);
   lcd.begin(16,2);
-  lcd.setCursor(0,0);
-  lcd.print("Basic Calculator");
-  lcd.setCursor(1,1);
-  lcd.print("Using Arduino");
+  lcd.setCursor(2,0);
+  lcd.print("calculator");
+  lcd.setCursor(3,1);
+  lcd.print("w cpp");
   delay(2000);
   lcd.clear();
 }
