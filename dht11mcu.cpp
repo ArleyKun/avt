@@ -12,7 +12,10 @@ DHT dht(DHTPIN, DHTTYPE);
 
 ESP8266WebServer server(80);
 
+bool wifiConnected = false;
+
 unsigned long lastSend = 0;
+unsigned long wifiTimeout = 10000; // max wait
 const unsigned long SEND_INTERVAL = 2000;
 
 float calculateHeatIndex(float temp, float hum) {
@@ -47,7 +50,7 @@ const char INDEX_HTML[] PROGMEM = R"=====(
     <div class="glow animate-pulse-slow" style="bottom: 10%; right: 10%; background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0) 70%);"></div>
     <div class="container max-w-5xl px-6 py-12">
         <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Room Temperature ; Room 508</h1>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Room Temperature</h1>
             <p class="text-slate-400 text-lg">Real-time environmental sensor data</p>
             <p class="text-slate-400 text-sm mt-2 opacity-70">Aromin - Haro - Mata - Gallentes</p>
         </header>
@@ -136,21 +139,39 @@ void setup() {
   delay(100);
   dht.begin();
 
+  // --- Non-blocking WiFi connect with timeout --- thank ai for making it easier
+  Serial.println("Connecting to WiFi...");
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
+
+  unsigned long startAttempt = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < wifiTimeout) {
     delay(500);
   }
 
-  if (MDNS.begin("room508")) {}
+  if (WiFi.status() == WL_CONNECTED) {
+    wifiConnected = true;
+    Serial.print("WiFi connected. IP: ");
+    Serial.println(WiFi.localIP());
 
-  server.on("/", handleRoot);
-  server.on("/data", handleData);
-  server.begin();
+    if (MDNS.begin("dhtley")) {
+      Serial.println("mDNS: dhtley.local");
+    }
+
+    server.on("/", handleRoot);
+    server.on("/data", handleData);
+    server.begin();
+    Serial.println("Web server started.");
+  } else {
+    wifiConnected = false;
+    Serial.println("WiFi unavailable. Running in Serial-only mode.");
+  }
 }
 
 void loop() {
+  if (wifiConnected) {
   MDNS.update();
   server.handleClient();
+  }
 
   if (millis() - lastSend >= SEND_INTERVAL) {
     lastSend = millis();
