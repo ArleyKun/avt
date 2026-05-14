@@ -9,16 +9,97 @@ byte degreeChar[8] = {
   0b00000, 0b00000, 0b00000, 0b00000
 };
 
+int i=0;
+int j=0;
+int randomnum;
+int k=0;
+byte customChar1[] = {
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F
+};
+
+byte customChar2[] = {
+  0x00,
+  0x00,
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F
+};
+byte customChar3[] = {
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x1F,
+  0x1F,
+  0x1F,
+  0x1F
+};
+byte customChar4[] = {
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x1F,
+  0x1F
+};
+byte customChar5[] = {
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x00
+};
+
 void setup() {
   Serial.begin(9600);
   fromESP.begin(9600);
 
   lcd.init();
   lcd.backlight();
-  lcd.createChar(0, degreeChar);
 
+  lcd.createChar(4, customChar1);
+  lcd.createChar(3, customChar2);
+  lcd.createChar(2, customChar3);
+  lcd.createChar(1, customChar4);
+  lcd.createChar(0, customChar5);
+
+  lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("  Room 508 Mon  ");
+  lcd.print("Aromin-Haro :]");
+  lcd.setCursor(0, 1);
+  lcd.print("Mata-Gallentes");
+  delay(2000);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("   Loading...    ");
+
+  for (int col = 0; col < 16; col++) {
+    lcd.setCursor(col, 1);
+    lcd.write(4); // full block (customChar1)
+    delay(120);
+  }
+  delay(500);
+  lcd.clear();
+
+  lcd.createChar(0, degreeChar); // re register
+  lcd.setCursor(0, 0);
+  lcd.print("Room Temperature ");
   lcd.setCursor(0, 1);
   lcd.print(" Waiting data...");
   delay(2000);
