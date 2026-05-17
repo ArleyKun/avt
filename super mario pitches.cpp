@@ -1,3 +1,12 @@
+/*
+  AROMIN, Arley Bentley S.
+  BAET 1 - A
+
+  Super Mario Bros. - Complete Theme
+  original melody transcription from various community sources.
+  Structure and code organization done with the help of modern tools
+*/
+
 #include "pitches.h"
 #define MELODY_PIN 11
 
