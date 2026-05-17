@@ -1,7 +1,7 @@
 /* 
 AROMIN, Arley Bentley S.
 BAET 1 - A
-This code was modified in collaboration with  with De Leon, Haro, Mata, and Sagadraca
+This code was modified in collaboration with De Leon, Haro, Mata, and Sagadraca
 */
 
 int soundPin = A0;
